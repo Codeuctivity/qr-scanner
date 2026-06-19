@@ -261,3 +261,15 @@ Building:
 ```batch
 yarn build
 ```
+
+## Integration test
+
+An end-to-end Playwright test is available to verify webcam-based QR recognition against the fake camera stream in
+`playwright/fixtures/VideoOfQrCode.mjpeg`.
+
+Install dependencies, install the Chromium test browser, then run:
+
+```batch
+npx playwright install chromium
+npm run test:integration
+```
