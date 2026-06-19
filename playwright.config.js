@@ -36,7 +36,7 @@ module.exports = {
         },
     ],
     webServer: {
-        command: 'node playwright\\support\\static-server.cjs',
+        command: 'node playwright/support/static-server.cjs',
         url: 'http://127.0.0.1:4173/playwright/fixtures/qr-camera-harness.html',
         reuseExistingServer: false,
         timeout: 30 * 1000,
