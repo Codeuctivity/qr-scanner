@@ -29,10 +29,6 @@ To install via npm:
 ```bash
 npm install --save qr-scanner
 ```
-To install via yarn:
-```bash
-yarn add qr-scanner
-```
 Or simply copy `qr-scanner.min.js` and `qr-scanner-worker.min.js` to your project.
 
 ## Setup
@@ -254,12 +250,12 @@ the /src folder. NodeJs is required for building.
 
 Install required build packages:
 ```batch
-yarn
+npm install
 ```
 
 Building:
 ```batch
-yarn build
+npm run build
 ```
 
 ## Integration test
