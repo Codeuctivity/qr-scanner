@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>QR scanner integration harness</title>
+</head>
+<body>
+    <p id="status">booting</p>
+    <pre id="result"></pre>
+    <pre id="error"></pre>
+    <video id="video" muted playsinline autoplay></video>
+
+    <script type="module">
+        import QrScanner from '/qr-scanner.min.js';
+
+        QrScanner._disableBarcodeDetector = true;
+
+        const statusElement = document.getElementById('status');
+        const resultElement = document.getElementById('result');
+        const errorElement = document.getElementById('error');
+        const videoElement = document.getElementById('video');
+
+        const setStatus = (status) => {
+            statusElement.textContent = status;
+            window.__scanState = {
+                ...window.__scanState,
+                status,
+            };
+        };
+
+        window.__scanState = {
+            status: 'booting',
+            result: null,
+            error: null,
+            cornerPoints: [],
+        };
+
+        let scanner;
+
+        const handleDecode = (result) => {
+            resultElement.textContent = result.data;
+            window.__scanState = {
+                status: 'decoded',
+                result: result.data,
+                error: null,
+                cornerPoints: result.cornerPoints,
+            };
+            scanner.stop();
+        };
+
+        const handleError = (error) => {
+            const message = error instanceof Error ? error.message : String(error);
+            if (message === QrScanner.NO_QR_CODE_FOUND) return;
+
+            errorElement.textContent = message;
+            window.__scanState = {
+                ...window.__scanState,
+                error: message,
+            };
+            setStatus('error');
+        };
+
+        try {
+            scanner = new QrScanner(videoElement, handleDecode, {
+                onDecodeError: handleError,
+                preferredCamera: 'user',
+                maxScansPerSecond: 10,
+                returnDetailedScanResult: true,
+            });
+            setStatus('starting');
+            await scanner.start();
+            setStatus('scanning');
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            errorElement.textContent = message;
+            window.__scanState = {
+                ...window.__scanState,
+                error: message,
+            };
+            setStatus('error');
+        }
+
+        window.addEventListener('beforeunload', () => scanner && scanner.destroy());
+    </script>
+</body>
+</html>
