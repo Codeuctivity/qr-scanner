@@ -48,6 +48,13 @@ jobs:
       - name: Run integration test
         run: npm run test:integration
 
+      - name: Upload release artifacts
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: artifacts/
+
   create-release:
     if: github.ref == 'refs/heads/release'
     needs: build-and-test
@@ -64,11 +71,14 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
+          package-manager-cache: false
           registry-url: https://registry.npmjs.org
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: artifacts
 
       - name: Derive release version
         id: version
@@ -83,9 +93,6 @@ jobs:
       - name: Apply release version
         run: npm version "${{ steps.version.outputs.release_version }}" --no-git-tag-version
 
-      - name: Build package
-        run: npm run build
-
       - name: Create npm package
         id: package
         shell: bash
@@ -93,15 +100,34 @@ jobs:
           VERSION="${{ steps.version.outputs.release_version }}"
           SHORT_SHA="${GITHUB_SHA::7}"
           TAG="v${VERSION}-${SHORT_SHA}"
-          PACKAGE_TGZ="$(npm pack --silent)"
+          PACKAGE_TGZ="$(npm pack --ignore-scripts --silent)"
 
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "package_tgz=${PACKAGE_TGZ}" >> "$GITHUB_OUTPUT"
 
+      - name: Debug publish context
+        shell: bash
+        env:
+          GITHUB_REPOSITORY_VALUE: ${{ github.repository }}
+          GITHUB_WORKFLOW_VALUE: ${{ github.workflow }}
+          GITHUB_WORKFLOW_REF_VALUE: ${{ github.workflow_ref }}
+          GITHUB_EVENT_NAME_VALUE: ${{ github.event_name }}
+          GITHUB_REF_VALUE: ${{ github.ref }}
+          GITHUB_SHA_VALUE: ${{ github.sha }}
+        run: |
+          echo "github.repository=$GITHUB_REPOSITORY_VALUE"
+          echo "github.workflow=$GITHUB_WORKFLOW_VALUE"
+          echo "github.workflow_ref=$GITHUB_WORKFLOW_REF_VALUE"
+          echo "github.event_name=$GITHUB_EVENT_NAME_VALUE"
+          echo "github.ref=$GITHUB_REF_VALUE"
+          echo "github.sha=$GITHUB_SHA_VALUE"
+          echo "package.name=$(node -p "require('./package.json').name")"
+          echo "package.repository.url=$(node -p "require('./package.json').repository.url")"
+
       - name: Publish to npm
-        run: npm publish --access public --provenance
+        run: npm publish --ignore-scripts --access public
 
       - name: Create GitHub release
         env:
