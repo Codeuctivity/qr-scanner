@@ -1,6 +1,6 @@
 # QR Scanner
 
-Javascript QR Code Scanner based on [Cosmo Wolfe's javascript port](https://github.com/cozmo/jsqr) of [Google's ZXing library](https://github.com/zxing/zxing); see also the orphaned upstream npm package [`qr-scanner`](https://www.npmjs.com/package/qr-scanner).
+JavaScript QR Code Scanner based on [Cosmo Wolfe's javascript port](https://github.com/cozmo/jsqr) of [Google's ZXing library](https://github.com/zxing/zxing); see also the orphaned upstream npm package [`qr-scanner`](https://www.npmjs.com/package/qr-scanner).
 
 In this library, several improvements have been applied over the original port:
 
