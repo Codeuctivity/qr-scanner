@@ -53,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
 
     steps:
       - name: Check out repository
@@ -63,9 +64,23 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Derive release version
+        id: version
+        shell: bash
+        run: |
+          BASE_VERSION="$(node -p "require('./package.json').version")"
+          RELEASE_VERSION="$(node -e "const [major, minor] = process.argv[1].split('.'); process.stdout.write([major, minor, process.argv[2]].join('.'));" "$BASE_VERSION" "${GITHUB_RUN_NUMBER}")"
+
+          echo "base_version=${BASE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "release_version=${RELEASE_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Apply release version
+        run: npm version "${{ steps.version.outputs.release_version }}" --no-git-tag-version
 
       - name: Build package
         run: npm run build
@@ -74,7 +89,7 @@ jobs:
         id: package
         shell: bash
         run: |
-          VERSION="$(node -p "require('./package.json').version")"
+          VERSION="${{ steps.version.outputs.release_version }}"
           SHORT_SHA="${GITHUB_SHA::7}"
           TAG="v${VERSION}-${SHORT_SHA}"
           PACKAGE_TGZ="$(npm pack --silent)"
@@ -84,6 +99,9 @@ jobs:
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "package_tgz=${PACKAGE_TGZ}" >> "$GITHUB_OUTPUT"
 
+      - name: Publish to npm
+        run: npm publish --access public --provenance
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -91,15 +109,15 @@ jobs:
         run: |
           gh release create "${{ steps.package.outputs.tag }}" \
             "${{ steps.package.outputs.package_tgz }}" \
-            qr-scanner-worker.min.js \
-            qr-scanner-worker.min.js.map \
-            qr-scanner.legacy.min.js \
-            qr-scanner.legacy.min.js.map \
-            qr-scanner.min.js \
-            qr-scanner.min.js.map \
-            qr-scanner.umd.min.js \
-            qr-scanner.umd.min.js.map \
-            types/qr-scanner.d.ts \
+            artifacts/qr-scanner-worker.min.js \
+            artifacts/qr-scanner-worker.min.js.map \
+            artifacts/qr-scanner.legacy.min.js \
+            artifacts/qr-scanner.legacy.min.js.map \
+            artifacts/qr-scanner.min.js \
+            artifacts/qr-scanner.min.js.map \
+            artifacts/qr-scanner.umd.min.js \
+            artifacts/qr-scanner.umd.min.js.map \
+            artifacts/types/qr-scanner.d.ts \
             --target "${GITHUB_SHA}" \
             --title "qr-scanner v${{ steps.package.outputs.version }} (${{ steps.package.outputs.short_sha }})" \
             --generate-notes
