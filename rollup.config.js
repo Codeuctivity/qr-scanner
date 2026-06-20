@@ -28,7 +28,7 @@ export default () => [
     {
         input: 'src/worker.ts',
         output: {
-            file: 'qr-scanner-worker.min.js',
+            file: 'artifacts/qr-scanner-worker.min.js',
             format: 'esm',
             interop: false,
             sourcemap: true,
@@ -54,10 +54,10 @@ export default () => [
             // imports are now widely supported anyways.
             external: ['./qr-scanner-worker.min.js'],
             output: [{
-                file: 'qr-scanner.min.js',
+                file: 'artifacts/qr-scanner.min.js',
                 format: 'esm',
             }, {
-                file: 'qr-scanner.umd.min.js',
+                file: 'artifacts/qr-scanner.umd.min.js',
                 format: 'umd',
                 name: 'QrScanner',
             }],
@@ -66,11 +66,11 @@ export default () => [
         // legacy build specific settings
         {
             aliases: {
-                // redirect to the built version in the dist folder
-                './qr-scanner-worker.min.js': '../qr-scanner-worker.min.js',
+                // redirect to the built worker artifact for inlining in the legacy bundle
+                './qr-scanner-worker.min.js': '../artifacts/qr-scanner-worker.min.js',
             },
             output: [{
-                file: 'qr-scanner.legacy.min.js',
+                file: 'artifacts/qr-scanner.legacy.min.js',
                 // only providing a umd build and no esm build, as support for es modules is lower than es6 generally
                 format: 'umd',
                 name: 'QrScanner',

@@ -1,6 +1,6 @@
 # QR Scanner
 
-Javascript QR Code Scanner based on [Cosmo Wolfe's javascript port](https://github.com/cozmo/jsqr) of [Google's ZXing library](https://github.com/zxing/zxing).
+JavaScript QR Code Scanner based on [Cosmo Wolfe's javascript port](https://github.com/cozmo/jsqr) of [Google's ZXing library](https://github.com/zxing/zxing); see also the orphaned upstream npm package [`qr-scanner`](https://www.npmjs.com/package/qr-scanner).
 
 In this library, several improvements have been applied over the original port:
 
@@ -15,39 +15,33 @@ According to [our benchmarking](https://github.com/danimoh/qr-scanner-benchmark)
 
 The library supports scanning a continuous video stream from a web cam as well as scanning of single images.
 
-The development of this library is sponsored by [nimiq](https://www.nimiq.com), world's first browser based blockchain.
-
-[<img src="https://nimiq.github.io/qr-scanner/nimiq_logo_rgb_horizontal.svg" alt="nimiq.com" width="250">](https://nimiq.com)
-
-
-## Demo
-See [https://nimiq.github.io/qr-scanner/demo/](https://nimiq.github.io/qr-scanner/demo/)
-
 ## Installation
 
-To install via npm:
+Install from npm if you bundle your application:
 ```bash
-npm install --save qr-scanner
+npm install @codeuctivity/qr-scanner
 ```
-To install via yarn:
-```bash
-yarn add qr-scanner
+
+Then import it from your application code:
+```js
+import QrScanner from '@codeuctivity/qr-scanner';
 ```
-Or simply copy `qr-scanner.min.js` and `qr-scanner-worker.min.js` to your project.
+
+If you are not using a bundler, copy `artifacts/qr-scanner.min.js` and `artifacts/qr-scanner-worker.min.js` from the published package (or a GitHub release) into your project and keep both files next to each other.
 
 ## Setup
 
-The QR Scanner consists of two main files. `qr-scanner.min.js` is the main API file which loads the worker script `qr-scanner-worker.min.js` via a dynamic import, only if needed. If you are not using a bundler like Rollup or Webpack that handles dynamic imports automatically, you might have to copy `qr-scanner-worker.min.js` over to your dist, next to `qr-scanner.min.js` or next to the script into which you're bundling `qr-scanner.min.js`.
+The QR Scanner consists of two main files. `artifacts/qr-scanner.min.js` is the main API file which loads the worker script `artifacts/qr-scanner-worker.min.js` via a dynamic import, only if needed. If you are not using a bundler like Rollup or Webpack that handles dynamic imports automatically, you might have to copy `artifacts/qr-scanner-worker.min.js` over to your dist, next to `artifacts/qr-scanner.min.js` or next to the script into which you're bundling `artifacts/qr-scanner.min.js`.
 
-`qr-scanner.min.js` is an es6 module and can be imported as follows:
+`artifacts/qr-scanner.min.js` is an es6 module and can be imported as follows:
 ```js
-import QrScanner from 'path/to/qr-scanner.min.js'; // if using plain es6 import
-import QrScanner from 'qr-scanner'; // if installed via package and bundling with a module bundler like webpack or rollup
+import QrScanner from 'path/to/artifacts/qr-scanner.min.js'; // if using plain es6 import
+import QrScanner from '@codeuctivity/qr-scanner'; // if installed via package and bundling with a module bundler like webpack or rollup
 ```
 This requires the importing script to also be an es6 module or a module script tag, e.g.:
 ```html
 <script type="module">
-    import QrScanner from 'path/to/qr-scanner.min.js';
+    import QrScanner from 'path/to/artifacts/qr-scanner.min.js';
     // do something with QrScanner
 </script>
 ```
@@ -55,27 +49,27 @@ This requires the importing script to also be an es6 module or a module script t
 If your project is not based on es6 modules you can
 - use a [dynamic import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports) to import the es6 module:
 ```js
-import('path/to/qr-scanner.min.js').then((module) => {
+import('path/to/artifacts/qr-scanner.min.js').then((module) => {
     const QrScanner = module.default;
     // do something with QrScanner
 });
 ```
-- use the [UMD build](https://github.com/umdjs/umd) `qr-scanner.umd.min.js` for direct usage as non-module script
+- use the [UMD build](https://github.com/umdjs/umd) `artifacts/qr-scanner.umd.min.js` for direct usage as non-module script
 ```html
-<script src="path/to/qr-scanner.umd.min.js"></script>
+<script src="path/to/artifacts/qr-scanner.umd.min.js"></script>
 <script>
     // do something with QrScanner
 </script>
 ```
-- bundle `qr-scanner.umd.min.js` directly with your non-module code with tools like [gulp](https://gulpjs.com/) or [grunt](https://gruntjs.com/).
+- bundle `artifacts/qr-scanner.umd.min.js` directly with your non-module code with tools like [gulp](https://gulpjs.com/) or [grunt](https://gruntjs.com/).
 - bundle the lib with `require` based bundlers like [browserify](https://browserify.org/):
 ```js
-const QrScanner = require('qr-scanner'); // if installed via package
-const QrScanner = require('path/to/qr-scanner.umd.min.js'); // if not installed via package
+const QrScanner = require('@codeuctivity/qr-scanner'); // if installed via package
+const QrScanner = require('path/to/artifacts/qr-scanner.umd.min.js'); // if not installed via package
 // do something with QrScanner
 ```
 
-This library uses ECMAScript 2017 features like `async` functions. If you need to support old browsers, you can use `qr-scanner.legacy.min.js`, which is ECMAScript 2015 (ES6) compatible. It's a UMD build and can be used as a replacement for `qr-scanner.umd.min.js`, see above. Note, that the legacy build is larger as it includes some polyfills and, to support browsers that don't support dynamic imports, inlines the worker script which however would be needed to be loaded in legacy browsers anyway. You will likely not need to use the legacy build though, as general browser support is already very good for the regular build. Especially if you want to scan from the device's camera, camera support by the browser is the stricter restriction.
+This library uses ECMAScript 2017 features like `async` functions. If you need to support old browsers, you can use `artifacts/qr-scanner.legacy.min.js`, which is ECMAScript 2015 (ES6) compatible. It's a UMD build and can be used as a replacement for `artifacts/qr-scanner.umd.min.js`, see above. Note that the legacy build is larger because it includes polyfills and, to support browsers that don't support dynamic imports, inlines the worker script which would have to be loaded separately in legacy browsers anyway. You will likely not need to use the legacy build though, as general browser support is already very good for the regular build. Especially if you want to scan from the device's camera, camera support by the browser is the stricter restriction.
 
 ## Usage
 
@@ -115,8 +109,8 @@ Supported options are:
 | `preferredCamera` | Preference for the camera to be used. The preference can be either a device id as returned by `listCameras` or a facing mode specified as `'environment'` or `'user'`. The default is `'environment'`. Note that there is no guarantee that the preference can actually be fulfilled. |
 | `maxScansPerSecond` | This option can be used to throttle the scans for less battery consumption. The default is 25. [If supported by the browser](https://caniuse.com/mdn-api_htmlvideoelement_requestvideoframecallback), the scan rate is never higher than the camera's frame rate to avoid unnecessary duplicate scans on the same frame. |
 | `calculateScanRegion` | A method that determines a region to which scanning should be restricted as a performance improvement. This region can optionally also be scaled down before performing the scan as an additional performance improvement. The region is specified as `x`, `y`, `width` and `height`; the dimensions for the downscaled region as `downScaledWidth` and `downScaledHeight`. Note that the aspect ratio between `width` and `height` and `downScaledWidth` and `downScaledHeight` should remain the same. By default, the scan region is restricted to a centered square of two thirds of the video width or height, whichever is smaller, and scaled down to a 400x400 square. |
-| `highlightScanRegion` | Set this option to `true` for rendering an outline around the scan region on the video stream. This uses an absolutely positioned `div` that covers the scan region. This `div` can either be supplied as option `overlay`, see below, or automatically created and then accessed via `qrScanner.$overlay`. It can be freely styled via CSS, e.g. by setting an outline, border, background color, etc. See the [demo](https://nimiq.github.io/qr-scanner/demo/) for examples. |
-| `highlightCodeOutline` | Set this option to `true` for rendering an outline around detected QR codes. This uses an absolutely positioned `div` on which an SVG for rendering the outline will be placed. This `div` can either be supplied as option `overlay`, see below, or be accessed via `qrScanner.$overlay`. The SVG can be freely styled via CSS, e.g. by setting the fill color, stroke color, stroke width, etc. See the [demo](https://nimiq.github.io/qr-scanner/demo/) for examples. For more special needs, you can also use the `cornerPoints` directly, see below, for rendering an outline or the points yourself. |
+| `highlightScanRegion` | Set this option to `true` for rendering an outline around the scan region on the video stream. This uses an absolutely positioned `div` that covers the scan region. This `div` can either be supplied as option `overlay`, see below, or automatically created and then accessed via `qrScanner.$overlay`. It can be freely styled via CSS, e.g. by setting an outline, border, background color, etc. |
+| `highlightCodeOutline` | Set this option to `true` for rendering an outline around detected QR codes. This uses an absolutely positioned `div` on which an SVG for rendering the outline will be placed. This `div` can either be supplied as option `overlay`, see below, or be accessed via `qrScanner.$overlay`. The SVG can be freely styled via CSS, e.g. by setting the fill color, stroke color, stroke width, etc. For more special needs, you can also use the `cornerPoints` directly, see below, for rendering an outline or the points yourself. |
 | `overlay` | A custom `div` that can be supplied for use for `highlightScanRegion` and `highlightCodeOutline`. The `div` should be a sibling of `videoElem` in the DOM. If this option is supplied, the default styles for `highlightCodeOutline` are not applied as the expectation is that the element already has some custom style applied to it. |
 | `returnDetailedScanResult` | Enforce reporting detailed scan results, see below. |
 
@@ -249,17 +243,17 @@ This will stop the camera stream and web worker and cleans up event listeners.
 The QR scanner will be dysfunctional after it has been destroyed.
 
 ## Build the project
-The project is prebuild in qr-scanner.min.js in combination with qr-scanner-worker.min.js. Building yourself is only necessary if you want to change the code in
-the /src folder. NodeJs is required for building.
+The published npm package (and GitHub releases) include the prebuilt artifacts under `artifacts/` (e.g. `artifacts/qr-scanner.min.js` and `artifacts/qr-scanner-worker.min.js`).
+To generate them locally from this repo checkout (required for the demo and integration tests), run the build steps below. NodeJs is required for building.
 
 Install required build packages:
 ```batch
-yarn
+npm install
 ```
 
 Building:
 ```batch
-yarn build
+npm run build
 ```
 
 ## Integration test

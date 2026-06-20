@@ -1,29 +1,32 @@
 {
-  "name": "qr-scanner",
-  "version": "1.4.2",
+  "name": "@codeuctivity/qr-scanner",
+  "version": "1.5.0",
   "description": "A javascript QR scanner library",
-  "main": "qr-scanner.umd.min.js",
-  "module": "qr-scanner.min.js",
-  "types": "types/qr-scanner.d.ts",
+  "packageManager": "npm@11.6.2",
+  "main": "artifacts/qr-scanner.umd.min.js",
+  "module": "artifacts/qr-scanner.min.js",
+  "types": "artifacts/types/qr-scanner.d.ts",
   "files": [
     "LICENSE",
-    "qr-scanner.min.js",
-    "qr-scanner.min.js.map",
-    "qr-scanner.umd.min.js",
-    "qr-scanner.umd.min.js.map",
-    "qr-scanner.legacy.min.js",
-    "qr-scanner.legacy.min.js.map",
-    "qr-scanner-worker.min.js",
-    "qr-scanner-worker.min.js.map",
-    "types/qr-scanner.d.ts"
+    "artifacts/qr-scanner.min.js",
+    "artifacts/qr-scanner.min.js.map",
+    "artifacts/qr-scanner.umd.min.js",
+    "artifacts/qr-scanner.umd.min.js.map",
+    "artifacts/qr-scanner.legacy.min.js",
+    "artifacts/qr-scanner.legacy.min.js.map",
+    "artifacts/qr-scanner-worker.min.js",
+    "artifacts/qr-scanner-worker.min.js.map",
+    "artifacts/types/qr-scanner.d.ts"
   ],
   "scripts": {
-    "build": "rollup --config && tsc src/qr-scanner.ts --target esnext --module esnext --declaration --declarationDir types --emitDeclarationOnly",
+    "build": "rollup --config && tsc src/qr-scanner.ts --target esnext --module esnext --declaration --declarationDir artifacts/types --emitDeclarationOnly",
+    "prepack": "npm run build",
+    "pack:local": "npm pack --pack-destination artifacts",
     "test:integration": "playwright test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nimiq/qr-scanner.git"
+    "url": "git+https://github.com/Codeuctivity/qr-scanner.git"
   },
   "keywords": [
     "qr",
@@ -39,9 +42,13 @@
   "author": "Nimiq (https://nimiq.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nimiq/qr-scanner/issues"
+    "url": "https://github.com/Codeuctivity/qr-scanner/issues"
   },
-  "homepage": "https://github.com/nimiq/qr-scanner#readme",
+  "homepage": "https://github.com/Codeuctivity/qr-scanner#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "dependencies": {
     "@types/offscreencanvas": "^2019.6.4"
   },
