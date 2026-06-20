@@ -243,8 +243,8 @@ This will stop the camera stream and web worker and cleans up event listeners.
 The QR scanner will be dysfunctional after it has been destroyed.
 
 ## Build the project
-The project is prebuilt into `artifacts/qr-scanner.min.js` together with `artifacts/qr-scanner-worker.min.js`. Building yourself is only necessary if you want to change the code in
-the /src folder. NodeJs is required for building.
+The published npm package (and GitHub releases) include the prebuilt artifacts under `artifacts/` (e.g. `artifacts/qr-scanner.min.js` and `artifacts/qr-scanner-worker.min.js`).
+To generate them locally from this repo checkout (required for the demo and integration tests), run the build steps below. NodeJs is required for building.
 
 Install required build packages:
 ```batch
