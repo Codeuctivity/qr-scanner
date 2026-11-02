@@ -1,19 +1,36 @@
 # QR Scanner
 
-JavaScript QR Code Scanner based on [Cosmo Wolfe's javascript port](https://github.com/cozmo/jsqr) of [Google's ZXing library](https://github.com/zxing/zxing); see also the orphaned upstream npm package [`qr-scanner`](https://www.npmjs.com/package/qr-scanner).
+A lightweight, fast JavaScript QR code scanner for the browser. Supports scanning a continuous video stream from a web cam as well as scanning of single images.
 
-In this library, several improvements have been applied over the original port:
+**[🔍 Live demo](https://qr-scanner.codeuctivity.cloud/)** &nbsp;·&nbsp; **[📦 npm package](https://www.npmjs.com/package/@codeuctivity/qr-scanner)** &nbsp;·&nbsp; **[GitHub](https://github.com/Codeuctivity/qr-scanner)**
+
+## Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Setup](#setup)
+- [Usage](#usage)
+  - [Web Cam Scanning](#web-cam-scanning)
+  - [Single Image Scanning](#single-image-scanning)
+  - [Checking for Camera availability](#checking-for-camera-availability)
+  - [Getting the list of available Cameras](#getting-the-list-of-available-cameras)
+  - [Specifying which camera to use](#specifying-which-camera-to-use)
+  - [Color Inverted Mode](#color-inverted-mode)
+  - [Color Correction](#color-correction)
+  - [Flashlight support](#flashlight-support)
+  - [Clean Up](#clean-up)
+- [Build the project](#build-the-project)
+- [Integration test](#integration-test)
+- [Background & credits](#background--credits)
+
+## Features
 
 - Web cam scanning support out of the box
 - Uses the browser's native [BarcodeDetector](https://web.dev/shape-detection/) [if available](https://github.com/WICG/shape-detection-api#overview)
 - Lightweight: ~59.3 kB (~16.3 kB gzipped) minified with Google's closure compiler. If the native `BarcodeDetector` is available, only ~15.3 kB (~5.6 kB gzipped) are loaded.
-- Improved performance and reduced memory footprint.
-- Runs in a WebWorker which keeps the main / UI thread responsive.
-- Can be configured for better performance on colored QR codes.
-
-According to [our benchmarking](https://github.com/danimoh/qr-scanner-benchmark) this project's scanner engine's detection rate is about 2-3 times (and up to 8 times) as high as the one of the most popular javascript QR scanner library [LazarSoft/jsqrcode](https://github.com/LazarSoft/jsqrcode). Also the other library oftentimes misreads the content of QR codes, while for this project no misreads occurred in the benchmarking.
-
-The library supports scanning a continuous video stream from a web cam as well as scanning of single images.
+- Improved performance and reduced memory footprint
+- Runs in a WebWorker which keeps the main / UI thread responsive
+- Can be configured for better performance on colored QR codes
 
 ## Installation
 
@@ -267,3 +284,9 @@ Install dependencies, install the Chromium test browser, then run:
 npx playwright install chromium
 npm run test:integration
 ```
+
+## Background & credits
+
+JavaScript QR Code Scanner based on [Cosmo Wolfe's javascript port](https://github.com/cozmo/jsqr) of [Google's ZXing library](https://github.com/zxing/zxing); see also the orphaned upstream npm package [`qr-scanner`](https://www.npmjs.com/package/qr-scanner).
+
+According to [our benchmarking](https://github.com/danimoh/qr-scanner-benchmark) this project's scanner engine's detection rate is about 2-3 times (and up to 8 times) as high as the one of the most popular javascript QR scanner library [LazarSoft/jsqrcode](https://github.com/LazarSoft/jsqrcode). Also the other library oftentimes misreads the content of QR codes, while for this project no misreads occurred in the benchmarking.
